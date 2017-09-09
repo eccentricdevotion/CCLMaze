@@ -6,6 +6,5 @@ options.txt
 logs/*
 
 bin/*
-.gradle/gradle.log
 
-.gradle/2.0/taskArtifacts/*
+.gradle/*
