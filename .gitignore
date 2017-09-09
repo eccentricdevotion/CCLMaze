@@ -1,0 +1,9 @@
+
+config/*
+
+options.txt
+
+logs/*
+
+bin/*
+.gradle/gradle.log

@@ -9,7 +9,6 @@ import com.christchurchcitylibraries.maze.block.MazeBlocks;
 import com.christchurchcitylibraries.maze.tileentity.MazeDoorTileEntity;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
@@ -114,7 +113,7 @@ public final class LabyrinthBuilder {
 					world.setBlock(pos.getX() + h, pos.getY() + 2, pos.getZ() + w, wall, wallItem.getItemDamage(), 2);
 					MazeDoorTileEntity mdteLower = (MazeDoorTileEntity) world.getTileEntity(pos.getX() + h, pos.getY(), pos.getZ() + w);
 					MazeDoorTileEntity mdteUpper = (MazeDoorTileEntity) world.getTileEntity(pos.getX() + h, pos.getY() + 1, pos.getZ() + w);
-					if (wall == MazeBlocks.mazeWall) {
+					if (wall == MazeBlocks.wallBlock) {
 						mdteLower.setColour(wallItem.getItemDamage());
 						mdteUpper.setColour(wallItem.getItemDamage());
 					}
