@@ -1,0 +1,16 @@
+[
+{
+  "modid": "cclmaze",
+  "name": "CCL Maze",
+  "description": "Customisable maze quizzes for Minecraft",
+  "version": "1.0.0",
+  "mcversion": "1.8.9",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Robbie Rate"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
