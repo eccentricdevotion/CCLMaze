@@ -1,5 +1,8 @@
 package com.christchurchcitylibraries.maze.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.christchurchcitylibraries.maze.client.MazeConfigSyncMessage;
 import com.christchurchcitylibraries.maze.config.MazeConfigHandler;
 import com.christchurchcitylibraries.maze.config.Question;
@@ -13,12 +16,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class MazePlayerServerLogin {
 
+	private static final Logger logger = LogManager.getLogger();
+
 	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onPlayerLoginEvent(PlayerLoggedInEvent event) {
-		System.out.println("[CCLMaze] PlayerLoggedInEvent");
 		if (!event.player.worldObj.isRemote) {
-			System.out.println("[CCLMaze] Syncing config to player: " + event.player.getDisplayName());
+			logger.info("[CCLMaze] Syncing config to player: " + event.player.getDisplayName());
 			NBTTagCompound compound = new NBTTagCompound();
 			compound.setInteger("Attempts", MazeConfigHandler.Attempts);
 			compound.setString("BaseBlock", MazeConfigHandler.BaseBlock);

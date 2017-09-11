@@ -8,7 +8,6 @@ public class MazeConfigChangedHandler {
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 		if (eventArgs.modID.equals("cclmaze")) {
-			System.out.println("[CCLMaze] ConfigChangedEvent.OnConfigChangedEvent");
 			MazeConfigHandler.syncConfigOptions();
 		}
 	}
