@@ -6,11 +6,14 @@ import com.christchurchcitylibraries.maze.config.Question;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MazePlayerServerLogin {
 
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onPlayerLoginEvent(PlayerLoggedInEvent event) {
 		System.out.println("[CCLMaze] PlayerLoggedInEvent");
