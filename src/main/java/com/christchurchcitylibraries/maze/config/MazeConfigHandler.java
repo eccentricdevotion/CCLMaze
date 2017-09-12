@@ -10,7 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 public class MazeConfigHandler {
 
 	public static Configuration config;
-	// public static Configuration questionsAndAnswers;
+	public static Configuration doors;
 
 	// Options
 	public static String FloorBlock;
@@ -129,5 +129,22 @@ public class MazeConfigHandler {
 			config.get("q&a_" + (q + 1), "Answers", defaultAnswers).set(question.getAnswers());
 			config.get("q&a_" + (q + 1), "CorrectAnswer", randomAnswers[random.nextInt(4)]).setValue(question.getCorrect());
 		}
+	}
+
+	public static void initDoors(File file) {
+		doors = new Configuration(file);
+	}
+
+	public static void addDoor(float fx, float fy, float fz, int iyaw) {
+
+		// count current number of categories
+		int c = doors.getCategoryNames().size() + 1;
+		String category = "door_" + c;
+		doors.addCustomCategoryComment(category, "A teleport location in front of a maze quiz start door.");
+		doors.getFloat("x", category, fx, -30000, 30000, "This is the x co-ordinate of the location.");
+		doors.getFloat("y", category, fy, 0, 256, "This is the y co-ordinate of the location.");
+		doors.getFloat("z", category, fz, -30000, 30000, "This is the z co-ordinate of the location.");
+		doors.getInt("yaw", category, iyaw, 0, 360, "This is the direction of the player when facing the door.");
+		doors.save();
 	}
 }

@@ -2,6 +2,7 @@ package com.christchurchcitylibraries.maze;
 
 import java.util.HashMap;
 
+import com.christchurchcitylibraries.maze.command.MazeCommand;
 import com.christchurchcitylibraries.maze.common.CommonProxy;
 
 import cpw.mods.fml.common.Mod;
@@ -11,6 +12,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = CCLMaze.MODID, name = CCLMaze.MODNAME, version = CCLMaze.VERSION, guiFactory = "com.christchurchcitylibraries.maze.config.MazeGuiFactory")
 
@@ -43,5 +45,11 @@ public class CCLMaze {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		proxy.postInit(e);
+	}
+
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent event) {
+		// register server commands
+		event.registerServerCommand(new MazeCommand());
 	}
 }

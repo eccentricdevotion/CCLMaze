@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntitySign;
 public final class MazeBlocks {
 
 	public static Block mazeBlock;
-	public static Block questionDoorBlock = new QuestionDoorBlock();
-	public static Block startDoorBlock = new StartDoorBlock();
+	public static Block questionDoorBlock;
+	public static Block startDoorBlock;
 	public static Block wallBlock;
 	public static Block floorBlock;
 	public static Block mazeSign;

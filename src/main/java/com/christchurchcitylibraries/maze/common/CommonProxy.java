@@ -39,6 +39,7 @@ public class CommonProxy {
 		configDir = new File(e.getModConfigurationDirectory() + "/CCLMaze");
 		configDir.mkdirs();
 		MazeConfigHandler.initOptions(new File(configDir.getPath(), CCLMaze.MODID + ".cfg"));
+		MazeConfigHandler.initDoors(new File(configDir.getPath(), "doors.cfg"));
 	}
 
 	public void init(FMLInitializationEvent e) {
