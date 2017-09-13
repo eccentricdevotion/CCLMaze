@@ -1,6 +1,7 @@
 package com.christchurchcitylibraries.maze.command;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.christchurchcitylibraries.maze.block.StartDoorBlock;
@@ -8,9 +9,12 @@ import com.christchurchcitylibraries.maze.config.MazeConfigHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -41,7 +45,7 @@ public class MazeCommand implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "maze <door>";
+		return "maze <door|ready|set|go>";
 	}
 
 	@Override
@@ -49,6 +53,7 @@ public class MazeCommand implements ICommand {
 		return aliases;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		World world = sender.getEntityWorld();
@@ -116,12 +121,70 @@ public class MazeCommand implements ICommand {
 					}
 				}
 			}
+			if (args[0].equals("ready")) {
+				// freeze all non-op players
+				List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+				for (EntityPlayerMP pmp : players) {
+					if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(pmp.getGameProfile())) {
+						pmp.setVelocity(0, 0, 0);
+						if (pmp.posX != pmp.prevPosX || pmp.posY != pmp.prevPosY || pmp.posZ != pmp.prevPosZ) {
+							pmp.setPositionAndUpdate(pmp.prevPosX, pmp.prevPosY, pmp.prevPosZ);
+						}
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode(), false);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode(), false);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode(), false);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode(), false);
+						if (pmp.capabilities.isFlying) {
+							KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode(), false);
+							KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), false);
+						}
+					}
+				}
+			}
+			if (args[0].equals("set")) {
+				// teleport to random door
+				List<String> doors = new ArrayList<String>(MazeConfigHandler.doors.getCategoryNames());
+				Collections.shuffle(doors);
+				int i = 0;
+				List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+				for (EntityPlayerMP pmp : players) {
+					if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(pmp.getGameProfile())) {
+						if (i > players.size() - 1) {
+							i = 0;
+						}
+						String category = doors.get(i);
+						double x = MazeConfigHandler.doors.get(category, "x", pmp.posX).getDouble();
+						double y = MazeConfigHandler.doors.get(category, "y", pmp.posY).getDouble();
+						double z = MazeConfigHandler.doors.get(category, "z", pmp.posZ).getDouble();
+						int yaw = MazeConfigHandler.doors.get(category, "yaw", 0).getInt();
+						pmp.setPositionAndRotation(x, y, z, yaw, 0);
+						i++;
+					}
+				}
+			}
+			if (args[0].equals("go")) {
+				// UN-freeze all non-op players
+				List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+				for (EntityPlayerMP pmp : players) {
+					if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(pmp.getGameProfile())) {
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode(), true);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode(), true);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode(), true);
+						KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode(), true);
+						if (pmp.capabilities.isFlying) {
+							KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode(), true);
+							KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), true);
+						}
+					}
+				}
+			}
 		}
 	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return true;
+		// only opped players
+		return (sender instanceof EntityPlayer && (MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayer) sender).getGameProfile())));
 	}
 
 	@Override
