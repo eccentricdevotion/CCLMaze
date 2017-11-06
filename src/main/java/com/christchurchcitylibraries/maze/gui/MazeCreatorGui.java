@@ -32,6 +32,7 @@ public class MazeCreatorGui extends GuiContainer {
 	private GuiButton create;
 	private GuiButton build;
 	private GuiCheckBox random;
+	private GuiCheckBox turtle;
 	private String[] directions = new String[] { "E", "N", "W", "S" };
 	private int i = 0;
 
@@ -62,6 +63,7 @@ public class MazeCreatorGui extends GuiContainer {
 		index.setMaxStringLength(1);
 		index.setText("1");
 		this.buttonList.add(this.random = new GuiCheckBox(50, this.guiLeft + 10, this.guiTop + 78, "Random", false));
+		this.buttonList.add(this.turtle = new GuiCheckBox(51, this.guiLeft + 10, this.guiTop + 97, "Turtle", false));
 	}
 
 	@Override
@@ -107,6 +109,10 @@ public class MazeCreatorGui extends GuiContainer {
 		}
 		if (random.func_146115_a()) {
 			String[] desc = { "Build a random labyrinth" };
+			drawHoveringText(Arrays.asList(desc), mouseX, mouseY, fontRendererObj);
+		}
+		if (turtle.func_146115_a()) {
+			String[] desc = { "Build a labyrinth without doors for Turtles to navigate" };
 			drawHoveringText(Arrays.asList(desc), mouseX, mouseY, fontRendererObj);
 		}
 		if (more.func_146115_a()) {
@@ -167,6 +173,9 @@ public class MazeCreatorGui extends GuiContainer {
 		if (button == this.random) {
 			this.mcte.setRandom(((GuiCheckBox) button).isChecked());
 		}
+		if (button == this.turtle) {
+			this.mcte.setTurtle(((GuiCheckBox) button).isChecked());
+		}
 		if (button == this.create || button == this.build) {
 			// get settings from this GUI
 			NBTTagCompound compound = new NBTTagCompound();
@@ -184,6 +193,8 @@ public class MazeCreatorGui extends GuiContainer {
 			compound.setInteger("index", i);
 			// random
 			compound.setBoolean("random", this.random.isChecked());
+			// turtles
+			compound.setBoolean("turtle", this.turtle.isChecked());
 			// wall
 			ItemStack wall = this.mcte.getStackInSlot(0);
 			if (wall == null) {

@@ -30,9 +30,10 @@ public final class LabyrinthBuilder {
 	private Block door;
 	private int doors = 0;
 	private final int size;
+	private final boolean forTurtles;
 	private List<Integer> indexes = new ArrayList<Integer>();
 
-	public LabyrinthBuilder(PART[][] maze, World world, BlockPos pos, ItemStack floor, ItemStack base, ItemStack wall) {
+	public LabyrinthBuilder(PART[][] maze, World world, BlockPos pos, ItemStack floor, ItemStack base, ItemStack wall, boolean turtles) {
 		this.labyrinth = maze;
 		this.world = world;
 		this.pos = pos;
@@ -49,6 +50,7 @@ public final class LabyrinthBuilder {
 		Collections.shuffle(this.indexes);
 		this.border = Block.getBlockById(3724);
 		this.nobuild = Block.getBlockById(3720);
+		this.forTurtles = turtles;
 	}
 
 	public void build() {
@@ -107,7 +109,7 @@ public final class LabyrinthBuilder {
 					sign.signText[3] = "Click to exit.";
 					sign.markDirty();
 				}
-				if (part.isDoor()) {
+				if (part.isDoor() && !forTurtles) {
 					door = (part.isStart()) ? MazeBlocks.startDoorBlock : MazeBlocks.questionDoorBlock;
 					ItemDoor.placeDoorBlock(world, pos.getX() + h, pos.getY(), pos.getZ() + w, facing, door);
 					world.setBlock(pos.getX() + h, pos.getY() + 2, pos.getZ() + w, wall, wallItem.getItemDamage(), 2);

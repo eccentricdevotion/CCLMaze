@@ -19,6 +19,7 @@ public final class MazeCreatorTileEntity extends TileEntity implements IInventor
 	private String direction;
 	private int index;
 	private boolean random;
+	private boolean turtle;
 
 	public MazeCreatorTileEntity() {
 		this.inventory = new ItemStack[this.getSizeInventory()];
@@ -60,6 +61,14 @@ public final class MazeCreatorTileEntity extends TileEntity implements IInventor
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public boolean isTurtle() {
+		return turtle;
+	}
+
+	public void setTurtle(boolean turtle) {
+		this.turtle = turtle;
 	}
 
 	public boolean isRandom() {

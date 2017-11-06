@@ -68,7 +68,7 @@ public class SyncMazeToServerMessage implements IMessage {
 		if (data.getBoolean("labyrinth")) {
 			LabyrinthBuilder lb;
 			if (data.getBoolean("random")) {
-				lb = new LabyrinthBuilder(Labyrinths.getRandomLabyrinth(), world, pos, floor, base, wall);
+				lb = new LabyrinthBuilder(Labyrinths.getRandomLabyrinth(), world, pos, floor, base, wall, data.getBoolean("turtle"));
 			} else {
 				DIRECTION d = DIRECTION.valueOf(data.getString("direction"));
 				int index = data.getInteger("index") - 1;
@@ -85,7 +85,7 @@ public class SyncMazeToServerMessage implements IMessage {
 				default:
 					break;
 				}
-				lb = new LabyrinthBuilder(Labyrinths.getLabyrinth(index), world, pos, floor, base, wall);
+				lb = new LabyrinthBuilder(Labyrinths.getLabyrinth(index), world, pos, floor, base, wall, data.getBoolean("turtle"));
 			}
 //			for (int i = 0; i < 8; i++) {
 //				LabyrinthBuilder lb = new LabyrinthBuilder(Labyrinths.getLabyrinth(i), world, pos.add(0, 0, (17 * i)), floor, base, wall);
