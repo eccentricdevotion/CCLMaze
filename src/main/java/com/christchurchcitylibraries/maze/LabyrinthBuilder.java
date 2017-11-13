@@ -99,7 +99,7 @@ public final class LabyrinthBuilder {
 				PART part = labyrinth[h][w];
 				// determine facing direction
 				int facing = part.getFacingMeta();
-				if (part.isEnd()) {
+				if (part.isEnd() && !forTurtles) {
 					// end, set sign
 					world.setBlock(pos.getX() + h, pos.getY() + 1, pos.getZ() + w, MazeBlocks.mazeSign, facing, 3);
 					TileEntitySign sign = (TileEntitySign) world.getTileEntity(pos.getX() + h, pos.getY() + 1, pos.getZ() + w);
