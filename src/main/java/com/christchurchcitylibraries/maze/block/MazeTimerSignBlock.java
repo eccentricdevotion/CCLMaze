@@ -34,6 +34,7 @@ public class MazeTimerSignBlock extends BlockSign {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		// send Server timer message
 		NBTTagCompound compound = new NBTTagCompound();
