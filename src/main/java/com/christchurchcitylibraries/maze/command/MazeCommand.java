@@ -1,9 +1,11 @@
 package com.christchurchcitylibraries.maze.command;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.christchurchcitylibraries.maze.CCLMaze;
 import com.christchurchcitylibraries.maze.block.StartDoorBlock;
 import com.christchurchcitylibraries.maze.config.MazeConfigHandler;
 
@@ -19,6 +21,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class MazeCommand implements ICommand {
 
@@ -31,6 +35,10 @@ public class MazeCommand implements ICommand {
 		completions.add("ready");
 		completions.add("set");
 		completions.add("go");
+		completions.add("question");
+		completions.add("answers");
+		completions.add("correct");
+		completions.add("read");
 	}
 
 	@Override
@@ -45,7 +53,7 @@ public class MazeCommand implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "maze <door|ready|set|go>";
+		return "maze <door|ready|set|go|question|answers|correct|read>";
 	}
 
 	@Override
@@ -178,6 +186,57 @@ public class MazeCommand implements ICommand {
 					}
 				}
 			}
+			if (args[0].equals("question")) {
+				// /maze question [n] [question text?]
+				if (args.length < 3) {
+					sender.addChatMessage(new ChatComponentText("Too few arguments. /maze question [n] [question text?]"));
+					return;
+				}
+				// get question number
+				String category = "q&a_" + args[1];
+				// get question
+				StringBuilder sb = new StringBuilder();
+				for (int i = 2; i < args.length; i++) {
+					sb.append(args[i]).append(" ");
+				}
+				String question = sb.toString().trim();
+				// sync to server config
+				if (setConfig(category, "Question", question)) {
+					sender.addChatMessage(new ChatComponentText("Config question " + args[1] + " changed!"));
+				}
+			}
+			if (args[0].equals("read")) {
+				// /maze read [n]
+				// get question number
+				String category = "q&a_" + args[1];
+				sender.addChatMessage(new ChatComponentText("Question " + args[1] + ": " + readConfig(category)));
+			}
+			if (args[0].equals("answers")) {
+				if (args.length < 6) {
+					sender.addChatMessage(new ChatComponentText("Too few arguments. /maze answers [n] [a2] [a1] [a3] [a4]"));
+					return;
+				}
+				// get question number
+				String category = "q&a_" + args[1];
+				// get answers
+				String[] answers = { args[2], args[3], args[4], args[5] };
+				// sync to server config
+				if (setConfig(category, answers)) {
+					sender.addChatMessage(new ChatComponentText("Config answers " + args[1] + " changed!"));
+				}
+			}
+			if (args[0].equals("correct")) {
+				if (args.length < 3) {
+					sender.addChatMessage(new ChatComponentText("Too few arguments. /maze correct [n] [A|B|C|D]"));
+					return;
+				}
+				// get question number
+				String category = "q&a_" + args[1];
+				// sync to server config
+				if (setConfig(category, "CorrectAnswer", args[2])) {
+					sender.addChatMessage(new ChatComponentText("Config correct " + args[1] + " changed!"));
+				}
+			}
 		}
 	}
 
@@ -195,5 +254,43 @@ public class MazeCommand implements ICommand {
 	@Override
 	public boolean isUsernameIndex(String[] args, int i) {
 		return false;
+	}
+
+	public boolean setConfig(String category, String option, String value) {
+		File configDir = getConfigDir();
+		String configPath = configDir.getPath();
+		File file = new File(configPath, CCLMaze.MODID + ".cfg");
+		System.out.println("Config path: " + file.getAbsolutePath());
+		Configuration config = new Configuration(file);
+		Property prop = config.get(category, option, "").setValue(value);
+		config.save();
+		return prop.hasChanged();
+	}
+
+	public boolean setConfig(String category, String[] values) {
+		File configDir = getConfigDir();
+		String configPath = configDir.getPath();
+		File file = new File(configPath, CCLMaze.MODID + ".cfg");
+		System.out.println("Config path: " + file.getAbsolutePath());
+		Configuration config = new Configuration(file);
+		Property prop = config.get(category, "Answers", "").setValues(values);
+		config.save();
+		return prop.hasChanged();
+	}
+
+	public String readConfig(String category) {
+		File configDir = getConfigDir();
+		String configPath = configDir.getPath();
+		File file = new File(configPath, CCLMaze.MODID + ".cfg");
+		Configuration config = new Configuration(file);
+		Property prop = config.get("q&a_" + category, "Question", "", "");
+		return prop.getString();
+	}
+
+	private File getConfigDir() {
+		if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDedicatedServer()) {
+			return new File("config/CCLMaze");
+		}
+		return new File(Minecraft.getMinecraft().mcDataDir, "config/CCLMaze");
 	}
 }
