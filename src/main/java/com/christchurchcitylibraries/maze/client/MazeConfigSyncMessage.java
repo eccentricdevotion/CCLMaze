@@ -62,6 +62,7 @@ public class MazeConfigSyncMessage implements IMessage {
 		MazeConfigHandler.config.get("Quizzes", "TeleportZ", 0).set(data.getInteger("TeleportZ"));
 		MazeConfigHandler.config.get("Creation", "WallBlock", "minecraft:stained_hardened_clay").set(data.getString("WallBlock"));
 		MazeConfigHandler.config.get("Creation", "WallColour", "LIME").set(data.getString("WallColour"));
-		MazeConfigHandler.syncConfigOptions();
+		MazeConfigHandler.config.save();
+//		MazeConfigHandler.syncConfigOptions();
 	}
 }

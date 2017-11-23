@@ -136,7 +136,6 @@ public class MazeConfigHandler {
 	}
 
 	public static void addDoor(float fx, float fy, float fz, int iyaw) {
-
 		// count current number of categories
 		int c = doors.getCategoryNames().size() + 1;
 		String category = "door_" + c;
