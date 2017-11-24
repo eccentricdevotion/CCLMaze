@@ -66,10 +66,11 @@ public class MazeCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] args) {
 		World world = sender.getEntityWorld();
 		if (world.isRemote) {
-			MovingObjectPosition omo = Minecraft.getMinecraft().objectMouseOver;
-			int ox = omo.blockX;
-			int oy = omo.blockY;
-			int oz = omo.blockZ;
+//			MovingObjectPosition omo = Minecraft.getMinecraft().objectMouseOver;
+//			int ox = omo.blockX;
+//			int oy = omo.blockY;
+//			int oz = omo.blockZ;
+//			System.out.println("Client objectMouseOver: " + ox + "," + oy + "," + oz + " " + world.getBlock(ox, oy, oz).getLocalizedName());
 		} else {
 			if (args.length == 0) {
 				sender.addChatMessage(new ChatComponentText("Invalid argument"));
