@@ -66,15 +66,11 @@ public class MazeCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] args) {
 		World world = sender.getEntityWorld();
 		if (world.isRemote) {
-			System.out.println("Processing on Client side");
 			MovingObjectPosition omo = Minecraft.getMinecraft().objectMouseOver;
 			int ox = omo.blockX;
 			int oy = omo.blockY;
 			int oz = omo.blockZ;
-
-			System.out.println("Client objectMouseOver: " + ox + "," + oy + "," + oz + " " + world.getBlock(ox, oy, oz).getLocalizedName());
 		} else {
-			System.out.println("Processing on Server side");
 			if (args.length == 0) {
 				sender.addChatMessage(new ChatComponentText("Invalid argument"));
 				return;
@@ -260,7 +256,6 @@ public class MazeCommand implements ICommand {
 		File configDir = getConfigDir();
 		String configPath = configDir.getPath();
 		File file = new File(configPath, CCLMaze.MODID + ".cfg");
-		System.out.println("Config path: " + file.getAbsolutePath());
 		Configuration config = new Configuration(file);
 		Property prop = config.get(category, option, "").setValue(value);
 		config.save();
@@ -271,7 +266,6 @@ public class MazeCommand implements ICommand {
 		File configDir = getConfigDir();
 		String configPath = configDir.getPath();
 		File file = new File(configPath, CCLMaze.MODID + ".cfg");
-		System.out.println("Config path: " + file.getAbsolutePath());
 		Configuration config = new Configuration(file);
 		Property prop = config.get(category, "Answers", "").setValues(values);
 		config.save();
