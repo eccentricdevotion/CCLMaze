@@ -104,20 +104,24 @@ public class MazeCommand implements ICommand {
 							// east
 							yaw = -90;
 							dx = -1.5f;
+							dz = 0.5f;
 							break;
 						case 1:
 							// south
+							dx = 0.5f;
 							dz = -1.5f;
 							break;
 						case 2:
 							// west
 							yaw = 90;
-							dx = 1.5f;
+							dx = 2.5f;
+							dz = 0.5f;
 							break;
 						default:
 							// north - 0
 							yaw = 180;
-							dz = 1.5f;
+							dx = 0.5f;
+							dz = 2.5f;
 							break;
 						}
 						MazeConfigHandler.addDoor(x + dx, y - dy, z + dz, yaw);
@@ -146,6 +150,17 @@ public class MazeCommand implements ICommand {
 				}
 			}
 			if (args[0].equals("set")) {
+				if (args.length > 1) {
+					// get player
+					EntityPlayer player = (EntityPlayer) sender;
+					// teleport to specific door
+					String category = "door_" + args[1];
+					double x = MazeConfigHandler.doors.get(category, "x", player.posX).getDouble();
+					double y = MazeConfigHandler.doors.get(category, "y", player.posY).getDouble();
+					double z = MazeConfigHandler.doors.get(category, "z", player.posZ).getDouble();
+					int yaw = MazeConfigHandler.doors.get(category, "yaw", 0).getInt();
+					player.setPositionAndRotation(x, y, z, yaw, 0);
+				}
 				// teleport to random door
 				List<String> doors = new ArrayList<String>(MazeConfigHandler.doors.getCategoryNames());
 				Collections.shuffle(doors);
