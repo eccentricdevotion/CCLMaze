@@ -153,32 +153,34 @@ public class MazeCommand implements ICommand {
 			if (args[0].equals("set")) {
 				if (args.length > 1) {
 					// get player
-					EntityPlayer player = (EntityPlayer) sender;
+					EntityPlayerMP player = (EntityPlayerMP) sender;
 					// teleport to specific door
 					String category = "door_" + args[1];
 					double x = MazeConfigHandler.doors.get(category, "x", player.posX).getDouble();
 					double y = MazeConfigHandler.doors.get(category, "y", player.posY).getDouble();
 					double z = MazeConfigHandler.doors.get(category, "z", player.posZ).getDouble();
 					int yaw = MazeConfigHandler.doors.get(category, "yaw", 0).getInt();
-					player.setPositionAndRotation(x, y, z, yaw, 0);
-				}
-				// teleport to random door
-				List<String> doors = new ArrayList<String>(MazeConfigHandler.doors.getCategoryNames());
-				Collections.shuffle(doors);
-				int i = 0;
-				List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-				for (EntityPlayerMP pmp : players) {
-					if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(pmp.getGameProfile())) {
-						if (i > players.size() - 1) {
-							i = 0;
+					player.playerNetServerHandler.setPlayerLocation(x, y, z, yaw, 0);
+					return;
+				} else {
+					// teleport to random door
+					List<String> doors = new ArrayList<String>(MazeConfigHandler.doors.getCategoryNames());
+					Collections.shuffle(doors);
+					int i = 0;
+					List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+					for (EntityPlayerMP pmp : players) {
+						if (!MinecraftServer.getServer().getConfigurationManager().func_152596_g(pmp.getGameProfile())) {
+							if (i > players.size() - 1) {
+								i = 0;
+							}
+							String category = doors.get(i);
+							double x = MazeConfigHandler.doors.get(category, "x", pmp.posX).getDouble();
+							double y = MazeConfigHandler.doors.get(category, "y", pmp.posY).getDouble();
+							double z = MazeConfigHandler.doors.get(category, "z", pmp.posZ).getDouble();
+							int yaw = MazeConfigHandler.doors.get(category, "yaw", 0).getInt();
+							pmp.playerNetServerHandler.setPlayerLocation(x, y, z, yaw, 0);
+							i++;
 						}
-						String category = doors.get(i);
-						double x = MazeConfigHandler.doors.get(category, "x", pmp.posX).getDouble();
-						double y = MazeConfigHandler.doors.get(category, "y", pmp.posY).getDouble();
-						double z = MazeConfigHandler.doors.get(category, "z", pmp.posZ).getDouble();
-						int yaw = MazeConfigHandler.doors.get(category, "yaw", 0).getInt();
-						pmp.setPositionAndRotation(x, y, z, yaw, 0);
-						i++;
 					}
 				}
 			}
