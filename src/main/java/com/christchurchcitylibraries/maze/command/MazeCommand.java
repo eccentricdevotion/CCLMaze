@@ -295,7 +295,7 @@ public class MazeCommand implements ICommand {
 		String configPath = configDir.getPath();
 		File file = new File(configPath, CCLMaze.MODID + ".cfg");
 		Configuration config = new Configuration(file);
-		Property prop = config.get("q&a_" + category, "Question", "", "");
+		Property prop = config.get(category, "Question", "", "");
 		return prop.getString();
 	}
 
