@@ -39,6 +39,7 @@ public class MazeCommand implements ICommand {
 		completions.add("answers");
 		completions.add("correct");
 		completions.add("read");
+		completions.add("sync");
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class MazeCommand implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "maze <door|ready|set|go|question|answers|correct|read>";
+		return "maze <door|ready|set|go|question|answers|correct|read|sync>";
 	}
 
 	@Override
@@ -251,6 +252,10 @@ public class MazeCommand implements ICommand {
 					sender.addChatMessage(new ChatComponentText("Config correct " + args[1] + " changed!"));
 				}
 			}
+			if (args[0].equals("sync")) {
+				// get questions/answers from server
+				syncConfig();
+			}
 		}
 	}
 
@@ -297,6 +302,11 @@ public class MazeCommand implements ICommand {
 		Configuration config = new Configuration(file);
 		Property prop = config.get(category, "Question", "", "");
 		return prop.getString();
+	}
+
+	public boolean syncConfig() {
+		System.out.println("Config path: " + getConfigDir().getAbsolutePath());
+		return true;
 	}
 
 	private File getConfigDir() {
