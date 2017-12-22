@@ -1,7 +1,6 @@
 package com.christchurchcitylibraries.maze.config;
 
 import java.io.File;
-import java.util.Random;
 
 import com.christchurchcitylibraries.maze.item.EnumDyeColor;
 
@@ -46,44 +45,47 @@ public class MazeConfigHandler {
 	private static String question10;
 	private static Object[] questionObjs;
 	// 10 answer sets
-	private static String[] defaultAnswers = { "Answer A", "Answer B", "Answer C", "Answer D" };
-	private static String[] answers1;
-	private static String[] answers2;
-	private static String[] answers3;
-	private static String[] answers4;
-	private static String[] answers5;
-	private static String[] answers6;
-	private static String[] answers7;
-	private static String[] answers8;
-	private static String[] answers9;
-	private static String[] answers10;
-	private static Object[] answerObjs;
+	private static String[] answers1 = { "Goodbye", "Bad", "A type of seafood", "Chicken" };
+	private static String[] answers2 = { "Mouse", "Cat", "Sheep", "Dog" };
+	private static String[] answers3 = { "Father", "Mother", "Children", "Grandma" };
+	private static String[] answers4 = { "Lake", "River", "Sea", "Rain" };
+	private static String[] answers5 = { "Water", "Big", "Grass", "Lunch" };
+	private static String[] answers6 = { "Hand", "Foot", "Nose", "Tongue" };
+	private static String[] answers7 = { "House", "Toilet", "Skyscraper", "Garage" };
+	private static String[] answers8 = { "Spirit", "Water", "Clouds", "Air" };
+	private static String[] answers9 = { "Come here", "Stay away", "Hurry up", "To delay" };
+	private static String[] answers10 = { "Water", "Sky", "Wind", "Land" };
+	private static String[][] answerObjs;
 	// 10 correct answers
-	private static String correct1;
-	private static String correct2;
-	private static String correct3;
-	private static String correct4;
-	private static String correct5;
-	private static String correct6;
-	private static String correct7;
-	private static String correct8;
-	private static String correct9;
-	private static String correct10;
-	private static Object[] correctObjs;
-
-	private static String[] randomAnswers = { "A", "B", "C", "D" };
-	private static Random random = new Random();
+	private static String correct1 = "B";
+	private static String correct2 = "D";
+	private static String correct3 = "C";
+	private static String correct4 = "A";
+	private static String correct5 = "B";
+	private static String correct6 = "D";
+	private static String correct7 = "B";
+	private static String correct8 = "A";
+	private static String correct9 = "D";
+	private static String correct10 = "C";
+	private static String[] correctObjs;
 
 	public static void initOptions(File file) {
 		for (int i = 0; i < 16; i++) {
 			colours[i] = EnumDyeColor.values()[i].getName().toUpperCase();
 		}
 		questionObjs = new Object[] { question1, question2, question3, question4, question5, question6, question7, question8, question9, question10 };
-		answerObjs = new Object[] { answers1, answers2, answers3, answers4, answers5, answers6, answers7, answers8, answers9, answers10 };
-		correctObjs = new Object[] { correct1, correct2, correct3, correct4, correct5, correct6, correct7, correct8, correct9, correct10 };
-		for (int i = 0; i < 10; i++) {
-			defaultQuestions[i] = "This is question number " + (i + 1);
-		}
+		answerObjs = new String[][] { answers1, answers2, answers3, answers4, answers5, answers6, answers7, answers8, answers9, answers10 };
+		correctObjs = new String[] { correct1, correct2, correct3, correct4, correct5, correct6, correct7, correct8, correct9, correct10 };
+		defaultQuestions[0] = "What is the English translation of the Maori word 'kino'?";
+		defaultQuestions[1] = "What is the English translation of the Maori word 'kuri'?";
+		defaultQuestions[2] = "What is the English translation of the Maori word 'tamariki'?";
+		defaultQuestions[3] = "What is the English translation of the Maori word 'roto'?";
+		defaultQuestions[4] = "What is the English translation of the Maori word 'nui'?";
+		defaultQuestions[5] = "What is the English translation of the Maori word 'arero'?";
+		defaultQuestions[6] = "What is the English translation of the Maori word 'paku'?";
+		defaultQuestions[7] = "What is the English translation of the Maori word 'wairua'?";
+		defaultQuestions[8] = "What is the English translation of the Maori word 'taihoa'?";
+		defaultQuestions[9] = "What is the English translation of the Maori word 'hau'?";
 		config = new Configuration(file);
 		syncConfigOptions();
 	}
@@ -114,8 +116,8 @@ public class MazeConfigHandler {
 			category = categories[q];
 			config.addCustomCategoryComment(category, "A quiz question, multi-choice answers and the correct answer.");
 			questionObjs[q] = config.getString("Question", category, defaultQuestions[q], "This is a question that players will answer to solve the Maze Quiz.");
-			answerObjs[q] = config.getStringList("Answers", category, defaultAnswers, "These are the multi-choice answers a player can choose from.");
-			correctObjs[q] = config.getString("CorrectAnswer", category, randomAnswers[random.nextInt(4)], "This is the correct answer.");
+			answerObjs[q] = config.getStringList("Answers", category, answerObjs[q], "These are the multi-choice answers a player can choose from.");
+			correctObjs[q] = config.getString("CorrectAnswer", category, correctObjs[q], "This is the correct answer.");
 			Question question = new Question(questionObjs[q], answerObjs[q], correctObjs[q]);
 			questions[q] = question;
 		}
@@ -126,8 +128,8 @@ public class MazeConfigHandler {
 		for (int q = 0; q < 10; q++) {
 			Question question = questions[q];
 			config.get("q&a_" + (q + 1), "Question", defaultQuestions[q]).setValue(question.getQuestion());
-			config.get("q&a_" + (q + 1), "Answers", defaultAnswers).set(question.getAnswers());
-			config.get("q&a_" + (q + 1), "CorrectAnswer", randomAnswers[random.nextInt(4)]).setValue(question.getCorrect());
+			config.get("q&a_" + (q + 1), "Answers", answerObjs[q]).set(question.getAnswers());
+			config.get("q&a_" + (q + 1), "CorrectAnswer", correctObjs[q]).setValue(question.getCorrect());
 		}
 	}
 
